@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cassert>
+#include <functional>
 
 using namespace std;
 
@@ -10,17 +12,8 @@ public:
     Node *next;
 
     // Constructors
-    Node()
-    {
-        data = 0;
-        next = nullptr;
-    }
-
-    Node(int data)
-    {
-        this->data = data;
-        this->next = nullptr;
-    }
+    Node() : data(0), next(nullptr) {}
+    Node(int value) : data(value), next(nullptr) {}
 };
 
 // LinkedList class represents a singly linked list
@@ -33,6 +26,8 @@ private:
 
     // Private helper method to traverse to a specific index in the list
     Node *traverse(int);
+    Node *mergeSortedLists(Node *left, Node *right, function<bool(int, int)>);
+    Node *mergeSort(Node *start, function<bool(int, int)> compareFunction);
 
 public:
     // Constructor
@@ -75,7 +70,15 @@ public:
     void reverse();
 
     // Removes all nodes from the list, leaving it empty.
-    void erase();
+    void clear();
+
+    // Prints the values of all nodes in the list.
+
+    void print();
+
+    // Sorts the nodes based on their values.
+
+    void sort(function<bool(int, int)> compareFunction);
 
     // Destructor to deallocate memory when the list is destroyed
     ~LinkedList();
@@ -108,8 +111,7 @@ int LinkedList::topFront()
 {
     if (this->empty())
     {
-        cout << "No element at the front top" << endl;
-        return 0;
+        throw out_of_range("No element at the front top");
     }
 
     return head->data;
@@ -156,8 +158,7 @@ int LinkedList::topBack()
 {
     if (this->empty())
     {
-        cout << "No element at the back top" << endl;
-        return 0;
+        throw out_of_range("No element at the front top");
     }
 
     return tail->data;
@@ -269,8 +270,7 @@ void LinkedList::remove(int index)
     // If the index is beyond the end, print an error message
     if (index >= size || index < 0)
     {
-        cout << "Index not found" << endl;
-        return;
+        throw out_of_range("Index not found");
     }
 
     // Traverse to the node before the specified index
@@ -295,8 +295,7 @@ int LinkedList::get(int index)
     // If the index is beyond the end, print an error message
     if (index >= size || index < 0)
     {
-        cout << "Index not found" << endl;
-        return -1;
+        throw out_of_range("Index not found");
     }
     return this->traverse(index)->data;
 }
@@ -336,12 +335,95 @@ void LinkedList::reverse()
 }
 
 // Method to removes all nodes from the list, leaving it empty.
-void LinkedList::erase()
+void LinkedList::clear()
 {
-    // Delete all nodes in the list
-    while (!this->empty())
-        this->popFront();
+
+    head = tail = nullptr;
+    size = 0;
     return;
+}
+// Method to print the values of all nodes in the list.
+void LinkedList::print()
+{
+    cout << "List: ";
+    Node *currentNode = head;
+    while (currentNode != nullptr)
+    {
+        std::cout << currentNode->data << " ";
+        currentNode = currentNode->next;
+    }
+
+    cout << endl;
+    return;
+}
+
+// Method to sort nodes with comapre function
+void LinkedList::sort(function<bool(int, int)> compareFunction = [](int a, int b)
+                      { return a < b; })
+{
+    head = this->mergeSort(head, compareFunction);
+}
+
+// Private helper method to perform Merge Sort on the linked list with a custom compareFunction  function
+
+Node *LinkedList::mergeSort(Node *start, function<bool(int, int)> compareFunction)
+{
+
+    // Base case: If the list is empty or has only one node, it's already sorted
+    if (start == nullptr || start->next == nullptr)
+    {
+        return start;
+    }
+
+    // Find the middle of the list
+    Node *slow = start;
+    Node *fast = start->next;
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // Split the list into two halves
+    Node *middle = slow->next;
+    slow->next = nullptr;
+
+    // Recursively sort the two halves
+    Node *left = mergeSort(start, compareFunction);
+    Node *right = mergeSort(middle, compareFunction);
+
+    // Merge the sorted halves
+    return mergeSortedLists(left, right, compareFunction);
+}
+
+// Private helper  to merge two sorted linked lists
+
+Node *LinkedList::mergeSortedLists(Node *left, Node *right, function<bool(int, int)> compareFunction)
+{
+    Node *mergeList = nullptr;
+
+    if (left == nullptr)
+    {
+        return right;
+    }
+
+    if (right == nullptr)
+    {
+        return left;
+    }
+    // Comapre  values of nodes and merge based on the custom Comapre  function
+    if (compareFunction(left->data, right->data))
+    {
+        mergeList = left;
+        mergeList->next = mergeSortedLists(left->next, right, compareFunction);
+    }
+    else
+    {
+        mergeList = right;
+        mergeList->next = mergeSortedLists(left, right->next, compareFunction);
+    }
+
+    return mergeList;
 }
 // Private helper method to traverse to a specific index in the list
 Node *LinkedList::traverse(int index)
@@ -359,5 +441,81 @@ Node *LinkedList::traverse(int index)
 // Destructor to deallocate memory when the list is destroyed
 LinkedList::~LinkedList()
 {
-    this->erase();
+    this->clear();
+}
+
+int main()
+{
+    // Test Case 1: Basic Operations
+    LinkedList list;
+
+    // Check if the list is initially empty
+    assert(list.empty());
+    assert(list.getSize() == 0);
+
+    // Test pushFront
+    list.pushFront(1);
+    list.pushFront(2);
+    list.pushFront(3);
+    assert(list.getSize() == 3);
+    assert(list.topFront() == 3);
+
+    // Test popFront
+    list.popFront();
+    assert(list.getSize() == 2);
+    assert(list.topFront() == 2);
+
+    // Test pushBack
+    list.pushBack(4);
+    assert(list.getSize() == 3);
+    assert(list.topBack() == 4);
+
+    // Test popBack
+
+    list.popBack();
+    assert(list.getSize() == 2);
+    assert(list.topBack() == 1);
+
+    // Test find
+    assert(list.find(2));
+    assert(!list.find(5));
+
+    // Test insert
+    list.insert(10, 1);
+    assert(list.getSize() == 3);
+    assert(list.get(1) == 10);
+
+    // Test remove
+    list.remove(1);
+    assert(list.getSize() == 2);
+    assert(list.get(1) != 10);
+
+    // Test clear
+    list.clear();
+    assert(list.empty());
+    assert(list.getSize() == 0);
+
+    // Test Case 2: Sorting
+    LinkedList list2;
+
+    // Add elements to the list
+    list2.pushBack(5);
+    list2.pushBack(2);
+    list2.pushBack(8);
+    list2.pushBack(1);
+
+    // Sort the list
+
+    list2.sort();
+
+    // Check if the list is sorted in ascending order
+    assert(list2.get(0) == 1);
+    assert(list2.get(1) == 2);
+    assert(list2.get(2) == 5);
+    assert(list2.get(3) == 8);
+
+       // All assertions passed
+    std::cout << "All tests passed successfully." << std::endl;
+
+    return 0;
 }
