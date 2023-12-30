@@ -119,8 +119,13 @@ int LinkedList::topFront()
 
 // Method to remove the node at the front of the list
 void LinkedList::popFront()
+
 {
-    if (!this->empty())
+    if (this->empty())
+    {
+        throw out_of_range("No element to pop from the top");
+    }
+    else
     {
         Node *prevHead = head;
         head = head->next;
@@ -170,12 +175,11 @@ void LinkedList::popBack()
     // Check if the list is empty
     if (this->empty())
     {
-        cout << "No element to pop from the back" << endl;
-        return;
+        throw out_of_range("No element to pop from the top");
     }
 
     // If there's only one node in the list, remove it
-    if (head->next == nullptr)
+    if (size == 1)
     {
         delete head;
         head = tail = nullptr;
@@ -514,7 +518,7 @@ int main()
     assert(list2.get(2) == 5);
     assert(list2.get(3) == 8);
 
-       // All assertions passed
+    // All assertions passed
     std::cout << "All tests passed successfully." << std::endl;
 
     return 0;
