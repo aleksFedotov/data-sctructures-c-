@@ -320,3 +320,46 @@ Node *DoubleLinkedList::traverse(int index)
 
     return currentNode;
 }
+
+int main()
+{
+    // Test case 1: Create an empty list
+    DoubleLinkedList myList;
+    assert(myList.empty());
+    assert(myList.size() == 0);
+
+    // Test case 2: Push elements to the front and back of the list
+    myList.pushFront(10);
+    myList.pushFront(20);
+    myList.pushBack(30);
+    assert(myList.size() == 3);
+    assert(myList.topFront() == 20);
+    assert(myList.topBack() == 30);
+
+    // Test case 3: Insert element at specific index
+    myList.insert(25, 1); // Insert 25 between 20 and 10
+    assert(myList.size() == 4);
+    assert(myList.get(1) == 25);
+
+    // Test case 4: Remove element from specific index
+    myList.remove(2); // Remove 10
+    assert(myList.size() == 3);
+    assert(myList.get(2) == 30);
+
+    // Test case 5: Pop elements from front and back of the list
+    myList.popFront();
+    myList.popBack();
+    assert(myList.size() == 1);
+    assert(myList.topFront() == 25);
+    assert(myList.topBack() == 25);
+
+    // Test case 6: Clear the list
+    myList.clear();
+    assert(myList.empty());
+    assert(myList.size() == 0);
+
+    // All tests passed
+    std::cout << "All tests passed successfully." << std::endl;
+
+    return 0;
+}
