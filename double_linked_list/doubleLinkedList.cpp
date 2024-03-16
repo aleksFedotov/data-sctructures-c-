@@ -22,7 +22,7 @@ class DoubleLinkedList
 private:
     Node *head;
     Node *tail;
-    int size;
+    int length;
 
     // Private helper method to traverse to a specific index in the list
     Node *traverse(int);
@@ -35,7 +35,7 @@ public:
     {
         head = nullptr;
         tail = nullptr;
-        size = 0;
+        length = 0;
     };
 
     // Methods to manipulate the front of the list
@@ -62,7 +62,7 @@ public:
 
     // Get size of a list
 
-    int getSize();
+    int size();
     // Returns the value at the specified index.
     int get(int);
 
@@ -86,27 +86,26 @@ public:
 
 bool DoubleLinkedList::empty()
 {
-    return size == 0;
+    return length == 0;
 }
 
 void DoubleLinkedList::pushFront(int value)
 {
+
     Node *newNode = new Node(value);
 
     if (this->empty())
     {
+        head = tail = newNode;
+    }
+    else
+    {
+        newNode->next = head;
+        head->prev = newNode;
         head = newNode;
-        tail = newNode;
-        size = 1;
-        return;
     }
 
-    newNode->next = head;
-    head->prev = newNode;
-    head = newNode;
-    size++;
-
-    return;
+    length++;
 }
 
 int DoubleLinkedList::topFront()
@@ -131,7 +130,7 @@ void DoubleLinkedList::popFront()
         head = head->next;
         head->prev = nullptr;
         delete prevHead;
-        size--;
+        length--;
     }
 
     return;
@@ -141,18 +140,19 @@ void DoubleLinkedList::pushBack(int value)
 
 {
     Node *newNode = new Node(value);
+
     if (this->empty())
     {
-        head = newNode;
-        tail = newNode;
-        size = 1;
-        return;
+        head = tail = newNode;
     }
-    tail->next = newNode;
-    newNode->prev = tail;
-    tail = newNode;
-    size++;
-    return;
+    else
+    {
+        tail->next = newNode;
+        newNode->prev = tail;
+        tail = newNode;
+    }
+
+    length++;
 }
 
 int DoubleLinkedList::topBack()
@@ -166,6 +166,7 @@ int DoubleLinkedList::topBack()
 }
 
 void DoubleLinkedList::popBack()
+
 {
 
     if (this->empty())
@@ -173,25 +174,149 @@ void DoubleLinkedList::popBack()
         throw out_of_range("No element to pop from the back");
     }
 
-    if (size == 1)
+    if (length == 1)
     {
         delete head;
         head = tail = nullptr;
-        size = 0;
+        length = 0;
         return;
     }
 
-    Node *currentNode = head;
+    Node *nodeToDelete = tail;
+    tail = tail->prev;
+    tail->next = nullptr;
+    delete nodeToDelete;
+    length--;
+    return;
+}
 
-    while (currentNode->next->next != nullptr)
+bool DoubleLinkedList::find(int value)
+{
+    Node *currentNode = head;
+    while (currentNode != nullptr)
     {
+        if (currentNode->data == value)
+        {
+            return true;
+        }
+
         currentNode = currentNode->next;
     }
 
-    tail = currentNode;
-    delete tail->next;
-    tail->next = nullptr;
+    return false;
+}
 
-    size--;
+void DoubleLinkedList::insert(int value, int index)
+{
+    if (index == 0)
+    {
+        this->pushFront(value);
+        length++;
+        return;
+    }
+
+    if (index > length)
+    {
+        this->pushBack(value);
+        length++;
+        return;
+    }
+
+    if (index < 0)
+    {
+        throw out_of_range("Index not found");
+    }
+
+    Node *leader = this->traverse(index - 1);
+    Node *follower = leader->next;
+    Node *newNode = new Node(value);
+    leader->next = newNode;
+    newNode->prev = leader;
+    newNode->next = follower;
+    follower->prev = newNode;
+
     return;
+}
+
+void DoubleLinkedList::remove(int index)
+{
+    if (index == 0)
+    {
+        this->popFront();
+        return;
+    }
+
+    if (index == length - 1)
+    {
+        this->popBack();
+        return;
+    }
+
+    if (index >= length || index < 0)
+    {
+        throw out_of_range("Index not found");
+    }
+
+    Node *prevNode = this->traverse(index - 1);
+    Node *nodeToDelete = prevNode->next;
+    Node *follower = nodeToDelete->next;
+    prevNode->next = follower;
+    follower->prev = prevNode;
+
+    delete nodeToDelete;
+    length--;
+    return;
+}
+
+int DoubleLinkedList::size()
+{
+    return length;
+}
+
+int DoubleLinkedList::get(int index)
+{
+    return this->traverse(index)->data;
+}
+
+void DoubleLinkedList::clear()
+{
+    while (!this->empty())
+    {
+        this->popFront();
+    }
+
+    return;
+}
+
+DoubleLinkedList::~DoubleLinkedList()
+{
+    this->clear();
+}
+
+void DoubleLinkedList::print()
+{
+    cout << "List: ";
+    Node *currentNode = head;
+    while (currentNode != nullptr)
+    {
+        std::cout << currentNode->data << " ";
+        currentNode = currentNode->next;
+    }
+
+    cout << endl;
+    return;
+}
+
+Node *DoubleLinkedList::traverse(int index)
+{
+    int count = 0;
+    Node *currentNode = head;
+
+    while (count != index)
+    {
+        currentNode = currentNode->next;
+        count++;
+    }
+
+    return currentNode;
 }

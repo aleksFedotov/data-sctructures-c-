@@ -92,8 +92,7 @@ void LinkedList::pushFront(int value)
     // If the list is empty, the new node becomes both head and tail
     if (this->empty())
     {
-        head = newNode;
-        tail = newNode;
+        head = tail = newNode;
     }
     else
     {
@@ -278,9 +277,9 @@ void LinkedList::remove(int index)
     }
 
     // Traverse to the node before the specified index
-    Node *follower = traverse(index - 1);
-    Node *nodeToDelete = follower->next;
-    follower->next = nodeToDelete->next;
+    Node *prevNode = traverse(index - 1);
+    Node *nodeToDelete = prevNode->next;
+    prevNode->next = nodeToDelete->next;
 
     // Delete the node at the specified index
     delete nodeToDelete;
@@ -341,9 +340,11 @@ void LinkedList::reverse()
 // Method to removes all nodes from the list, leaving it empty.
 void LinkedList::clear()
 {
+    while (!this->empty())
+    {
+        this->popFront();
+    }
 
-    head = tail = nullptr;
-    size = 0;
     return;
 }
 // Method to print the values of all nodes in the list.
