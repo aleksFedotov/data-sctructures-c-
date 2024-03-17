@@ -71,6 +71,9 @@ public:
         stack.clear(); // Remove all elements from the vector
         size = 0;      // Reset the size of the stack to zero
     };
+
+    // Destructor to deallocate memory when the list is destroyed
+    ~Stack();
 };
 
 int main()
