@@ -1,3 +1,6 @@
+#ifndef DOUBLE_LINKED_LIST_H
+#define DOUBLE_LINKED_LIST_H
+
 #include <iostream>
 #include <cassert>
 #include <functional>
@@ -321,6 +324,7 @@ Node *DoubleLinkedList::traverse(int index)
     return currentNode;
 }
 
+#endif DOUBLE_LINKED_LIST_H
 int main()
 {
     // Test case 1: Create an empty list
