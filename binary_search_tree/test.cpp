@@ -129,6 +129,85 @@ void testPostOrderTraversal() {
     assert(result == expected);
 }
 
+void testFindMin() {
+    BST tree;
+    tree.insert(10);
+    tree.insert(5);
+    tree.insert(15);
+    tree.insert(3);
+    tree.insert(7);
+    tree.insert(13);
+    tree.insert(18);
+
+    assert(tree.findMin() == 3);
+}
+void testFindMax() {
+    BST tree;
+    tree.insert(10);
+    tree.insert(5);
+    tree.insert(15);
+    tree.insert(3);
+    tree.insert(7);
+    tree.insert(13);
+    tree.insert(18);
+
+    assert(tree.findMax() == 18);
+}
+
+
+void testFindHeight() {
+    BST tree;
+    tree.insert(10);
+    tree.insert(5);
+    tree.insert(15);
+    tree.insert(3);
+    tree.insert(7);
+    tree.insert(13);
+    tree.insert(18);
+
+    assert(tree.findHeight() == 3);
+}
+
+
+void testIsBalanced() {
+    BST balancedTree;
+    balancedTree.insert(10);
+    balancedTree.insert(5);
+    balancedTree.insert(15);
+    balancedTree.insert(3);
+    balancedTree.insert(7);
+    balancedTree.insert(13);
+    balancedTree.insert(18);
+
+    assert(balancedTree.isBalanced() == true);
+
+    BST unBalancedTree;
+    balancedTree.insert(5);
+    balancedTree.insert(10);
+    balancedTree.insert(15);
+    balancedTree.insert(20);
+    balancedTree.insert(25);
+    balancedTree.insert(30);
+
+    assert(balancedTree.isBalanced() == false);
+}
+
+
+void testCountNodes() {
+     BST tree;
+    tree.insert(10);
+    tree.insert(5);
+    tree.insert(15);
+    tree.insert(3);
+    tree.insert(7);
+    tree.insert(13);
+    tree.insert(18);
+
+    assert(tree.countNodes() == 7);
+}
+
+
+
 int main() {
     testInsert();
     testSearch();
@@ -136,6 +215,11 @@ int main() {
     testInOrderTraversal();
     testPreOrderTraversal();
     testPostOrderTraversal();
+    testFindMin();
+    testFindMax();
+    testFindHeight();
+    testIsBalanced();
+    testCountNodes();
 
     std::cout << "All tests passed!" << std::endl;
 

@@ -57,6 +57,17 @@ public:
     void insertIterative(int valA);
 
     // Public function to search a value recursively
+    
+    // Helper function to find height of tree
+    int findHeight(BSTNode* node);
+
+    // Helper function to check if tree is balanced
+    bool isBalanced(BSTNode* node);
+
+    // Helper function to count number of node in a tree
+    int countNodes(BSTNode* node);
+public: 
+    
     BSTNode* search(int valA);
 
     // Public function to search a value iteratively
@@ -81,13 +92,13 @@ public:
     int findMax();
 
     // Public function to find height of tree
-    int findHeight(BSTNode* node);
+    int findHeight();
 
     // Public function to check if tree is balanced
-    bool isBalanced(BSTNode* node);
+    bool isBalanced();
 
     // Public function to count number of node in a tree
-    int countNodes(BSTNode* node);
+    int countNodes();
 
 
 
@@ -298,7 +309,7 @@ int BST::findMax() {
     return currentNode->val;
 }
 
-// Public function to find height of tree
+// Helper function to find height of tree
 int BST::findHeight(BSTNode* node) {
     // Check if the current node is null
     if(node == nullptr) {
@@ -316,7 +327,7 @@ int BST::findHeight(BSTNode* node) {
     return max(leftSubTreeHeight, rightSubTreeHeight) + 1;
 }
 
-// Public function to check if tree is balanced
+// Helper function to check if tree is balanced
 bool BST::isBalanced(BSTNode* node) {
     // If the current node is null, it is balanced
     if(node == nullptr) {
@@ -334,15 +345,28 @@ bool BST::isBalanced(BSTNode* node) {
     return abs(leftSubtreeHeight - rightSubtreeHeight) <= 1 && isBalanced(node->left) && isBalanced(node->right);
 }
 
-// Public function to count number of node in a tree
+// Helper function to count number of node in a tree
 int BST::countNodes(BSTNode* node) {
-    // If the current node is null, return 0 as there are no nodes in the subtree
-    if(node == nullptr) {
+    if(node == nullptr){
         return 0;
     }
 
-    // Return 1 (counting the current node) plus the counts of nodes in the left and right subtrees
     return 1 + countNodes(node->left) + countNodes(node->right);
+}
+
+// Helper function to find height of tree
+int BST::findHeight() {
+    return findHeight(root);
+}
+
+// Helper function to check if tree is balanced
+bool BST::isBalanced() {
+  return isBalanced(root);
+}
+
+// Helper function to count number of node in a tree
+int BST::countNodes() {
+    return countNodes(root);
 }
 // Destructor to delete the entire BST
 BST::~BST() {
