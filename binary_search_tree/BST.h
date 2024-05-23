@@ -74,6 +74,24 @@ public:
     // Public function to perform post-order traversal
     void postOrderTraversal();
 
+    // Public function to find min value in BST
+    int findMin();
+
+    // Public function to find max value in BST
+    int findMax();
+
+    // Public function to find height of tree
+    int findHeight(BSTNode* node);
+
+    // Public function to check if tree is balanced
+    bool isBalanced(BSTNode* node);
+
+    // Public function to count number of node in a tree
+    int countNodes(BSTNode* node);
+
+
+
+
     // Destructor to delete the entire BST
     ~BST();
 };
@@ -239,6 +257,93 @@ void BST::postOrderTraversal() {
     cout << endl;
 }
 
+// Public function to find min value in BST
+int BST::findMin() {
+    // Check if the tree is empty
+    if (root == nullptr) {
+        cout << "Tree is empty" << endl; // Output a message indicating that the tree is empty
+        return -1; // Return -1 to indicate that there is no minimum value
+    }
+
+    // Initialize a pointer to traverse the tree, starting from the root
+    BSTNode* currentNode = root;
+    
+    // Traverse the left subtree to find the minimum value
+    while (currentNode->left != nullptr) {
+        currentNode = currentNode->left; // Move to the left child
+    }
+
+    // Return the value of the leftmost (minimum) node
+    return currentNode->val;
+}
+
+// Public function to find max value in BST
+int BST::findMax() {
+    // Check if the root of the BST is null
+    if(root == nullptr) {
+        // If the tree is empty, print a message and return -1
+        cout << "Tree is empty" << endl;
+        return -1;
+    }
+
+    // Initialize a pointer to traverse the tree, starting at the root
+    BSTNode* currentNode = root;
+    
+    // Traverse the tree to the rightmost node (which has the maximum value)
+    while (currentNode->right != nullptr) {
+        currentNode = currentNode->right;
+    }
+
+    // Return the value of the rightmost node
+    return currentNode->val;
+}
+
+// Public function to find height of tree
+int BST::findHeight(BSTNode* node) {
+    // Check if the current node is null
+    if(node == nullptr) {
+        // If the node is null, return 0 to indicate an empty subtree
+        return 0;
+    }
+
+    // Recursively find the height of the left subtree
+    int leftSubTreeHeight = findHeight(node->left);
+
+    // Recursively find the height of the right subtree
+    int rightSubTreeHeight = findHeight(node->right);
+
+    // Return the maximum height of the left and right subtrees, plus 1
+    return max(leftSubTreeHeight, rightSubTreeHeight) + 1;
+}
+
+// Public function to check if tree is balanced
+bool BST::isBalanced(BSTNode* node) {
+    // If the current node is null, it is balanced
+    if(node == nullptr) {
+        return true;
+    }
+
+    // Calculate the height of the left subtree
+    int leftSubtreeHeight = findHeight(node->left);
+
+    // Calculate the height of the right subtree
+    int rightSubtreeHeight = findHeight(node->right);
+
+    // Check if the absolute difference between the heights of left and right subtrees is at most 1,
+    // and recursively check if both left and right subtrees are balanced
+    return abs(leftSubtreeHeight - rightSubtreeHeight) <= 1 && isBalanced(node->left) && isBalanced(node->right);
+}
+
+// Public function to count number of node in a tree
+int BST::countNodes(BSTNode* node) {
+    // If the current node is null, return 0 as there are no nodes in the subtree
+    if(node == nullptr) {
+        return 0;
+    }
+
+    // Return 1 (counting the current node) plus the counts of nodes in the left and right subtrees
+    return 1 + countNodes(node->left) + countNodes(node->right);
+}
 // Destructor to delete the entire BST
 BST::~BST() {
     deleteTree(root);
