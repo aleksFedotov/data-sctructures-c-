@@ -44,6 +44,19 @@ private:
     // Helper function to delete the entire tree
     void deleteTree(BSTNode* node);
 
+    // Helper function to find height of tree
+    int findHeight(BSTNode* node);
+
+    // Helper function to check if tree is balanced
+    bool isBalanced(BSTNode* node);
+
+    // Helper function to find Lowest Common Ancestor
+    BSTNode* findLCA(BSTNode* node,int valA, int valB);
+
+
+    // Helper function to check if the tree is valid
+    bool isValidBST(BSTNode* node, BSTNode* minNode = nullptr, BSTNode* maxNode = nullptr);
+
 public:
     BSTNode* root;  // Root node of the BST
 
@@ -57,16 +70,9 @@ public:
     void insertIterative(int valA);
 
     // Public function to search a value recursively
-    
-    // Helper function to find height of tree
-    int findHeight(BSTNode* node);
-
-    // Helper function to check if tree is balanced
-    bool isBalanced(BSTNode* node);
 
     // Helper function to count number of node in a tree
     int countNodes(BSTNode* node);
-public: 
     
     BSTNode* search(int valA);
 
@@ -99,6 +105,12 @@ public:
 
     // Public function to count number of node in a tree
     int countNodes();
+
+    // Public function to find Lowest Common Ancestor
+    BSTNode* findLCA(int valA, int valB);
+
+    // Public function to check if the tree is valid
+    bool isValidBST();
 
 
 
@@ -354,20 +366,73 @@ int BST::countNodes(BSTNode* node) {
     return 1 + countNodes(node->left) + countNodes(node->right);
 }
 
-// Helper function to find height of tree
+// Public function to find height of tree
 int BST::findHeight() {
     return findHeight(root);
 }
 
-// Helper function to check if tree is balanced
+// Public function to check if tree is balanced
 bool BST::isBalanced() {
   return isBalanced(root);
 }
 
-// Helper function to count number of node in a tree
+// Public function to count number of node in a tree
 int BST::countNodes() {
     return countNodes(root);
 }
+
+// Helper function to find Lowest Common Ancestor
+BSTNode* BST::findLCA(BSTNode* node, int valA, int valB) {
+    // If the current node is null, return null (base case for recursion)
+    if (node == nullptr) {
+        return nullptr;
+    }
+
+    // If both values are less than the current node's value,
+    // the LCA must be in the left subtree
+    if (node->val > valA && node->val > valB) {
+        return findLCA(node->left, valA, valB);
+    }
+
+    // If both values are greater than the current node's value,
+    // the LCA must be in the right subtree
+    if (node->val < valA && node->val < valB) {
+        return findLCA(node->right, valA, valB);
+    }
+
+    // If one value is less than or equal to the current node's value and the other is greater than or equal to it,
+    // then the current node is the LCA
+    return node;
+}
+// Public function to find Lowest Common Ancestor
+BSTNode* BST::findLCA(int valA, int valB) {
+   return findLCA(root, valA,valB);
+}
+
+ // Helper function to check if the tree is valid
+bool BST::isValidBST(BSTNode* node, BSTNode* minNode = nullptr, BSTNode* maxNode = nullptr) {
+    // If the current node is null, the subtree is valid (base case for recursion)
+    if (node == nullptr) {
+        return true;
+    }
+
+    // If the current node's value is not within the valid range, return false
+    if ((minNode != nullptr && node->val <= minNode->val) || (maxNode != nullptr && node->val >= maxNode->val)) {
+        return false;
+    }
+
+    // Recursively validate the left and right subtrees
+    return isValidBST(node->left, minNode, node) && isValidBST(node->right, node, maxNode);
+}
+
+ // Public function to check if the tree is valid
+
+ bool BST::isValidBST() {
+    return isValidBST(root);
+ }
+
+
+
 // Destructor to delete the entire BST
 BST::~BST() {
     deleteTree(root);
