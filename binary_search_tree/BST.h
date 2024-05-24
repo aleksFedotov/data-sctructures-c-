@@ -410,7 +410,7 @@ BSTNode* BST::findLCA(int valA, int valB) {
 }
 
  // Helper function to check if the tree is valid
-bool BST::isValidBST(BSTNode* node, BSTNode* minNode = nullptr, BSTNode* maxNode = nullptr) {
+bool BST::isValidBST(BSTNode* node, BSTNode* minNode, BSTNode* maxNode) {
     // If the current node is null, the subtree is valid (base case for recursion)
     if (node == nullptr) {
         return true;

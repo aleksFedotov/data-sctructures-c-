@@ -194,7 +194,7 @@ void testIsBalanced() {
 
 
 void testCountNodes() {
-     BST tree;
+    BST tree;
     tree.insert(10);
     tree.insert(5);
     tree.insert(15);
@@ -204,6 +204,65 @@ void testCountNodes() {
     tree.insert(18);
 
     assert(tree.countNodes() == 7);
+}
+void testFindLCA() {
+    BST tree;
+
+    tree.insert(20);
+    tree.insert(10);
+    tree.insert(5);
+    tree.insert(15);
+    tree.insert(30);
+    tree.insert(25);
+    tree.insert(35);
+
+    BSTNode* lca = tree.findLCA(5, 15);
+    assert(lca != nullptr && lca->val == 10);
+
+    lca = tree.findLCA(5, 30);
+    assert(lca != nullptr && lca->val == 20);
+
+    lca = tree.findLCA(25, 35);
+    assert(lca != nullptr && lca->val == 30);
+
+    lca = tree.findLCA(5, 10);
+    assert(lca != nullptr && lca->val == 10);
+
+    lca = tree.findLCA(10, 30);
+    assert(lca != nullptr && lca->val == 20);
+}
+
+void testIsValidBST() {
+    BST tree;
+
+   
+    tree.insert(20);
+    tree.insert(10);
+    tree.insert(30);
+    tree.insert(5);
+    tree.insert(15);
+    tree.insert(25);
+    tree.insert(35);
+
+    
+    assert(tree.isValidBST() == true);
+
+    // Insert nodes to form an invalid BST
+    // Manually create an invalid BST by breaking the BST property
+    BSTNode* root = new BSTNode(20);
+    root->left = new BSTNode(10);
+    root->right = new BSTNode(30);
+    root->left->left = new BSTNode(5);
+    root->left->right = new BSTNode(25); // This makes the tree invalid
+    root->right->left = new BSTNode(25);
+    root->right->right = new BSTNode(35);
+
+    tree.root = root;
+
+    // Test that the tree is not a valid BST
+    assert(tree.isValidBST() == false);
+
+    
 }
 
 
@@ -220,6 +279,7 @@ int main() {
     testFindHeight();
     testIsBalanced();
     testCountNodes();
+    testFindLCA();
 
     std::cout << "All tests passed!" << std::endl;
 
