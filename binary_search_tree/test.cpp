@@ -2,6 +2,9 @@
 #include "BST.h"
 #include <functional>
 #include <vector>
+#include <iostream>
+#include <sstream>
+
 
 using namespace std;
 
@@ -46,13 +49,13 @@ void testDelete() {
     tree.insert(13);
     tree.insert(18);
 
-    tree.deletNode(5);
+    tree.deleteNode(5);
     assert(tree.search(5) == nullptr);
 
-    tree.deletNode(15);
+    tree.deleteNode(15);
     assert(tree.search(15) == nullptr);
 
-    tree.deletNode(10);
+    tree.deleteNode(10);
     assert(tree.search(10) == nullptr);
     assert(tree.root != nullptr && tree.root->val == 13); // New root should be the inorder successor
 }
@@ -265,6 +268,33 @@ void testIsValidBST() {
     
 }
 
+void testLevelOrderTraversal() {
+    
+    BST tree;
+
+    tree.insert(5);
+    tree.insert(3);
+    tree.insert(7);
+    tree.insert(2);
+    tree.insert(4);
+    tree.insert(6);
+    tree.insert(8);
+
+    
+    ostringstream capturedOutput;
+    streambuf* oldCoutBuffer = cout.rdbuf(capturedOutput.rdbuf());
+    
+    tree.levelOrderTraversal();
+
+    cout.rdbuf(oldCoutBuffer);
+
+    string output = capturedOutput.str();
+
+    string expectedOutput = "5 3 7 2 4 6 8 \n";
+
+    assert(output == expectedOutput);  
+}
+
 
 
 int main() {
@@ -280,6 +310,7 @@ int main() {
     testIsBalanced();
     testCountNodes();
     testFindLCA();
+    testLevelOrderTraversal();
 
     std::cout << "All tests passed!" << std::endl;
 

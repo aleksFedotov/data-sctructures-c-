@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -80,7 +81,7 @@ public:
     BSTNode* searchIterative(int valA);
 
     // Public function to delete a node
-    void deletNode(int valA);
+    void deleteNode(int valA);
 
     // Public function to perform in-order traversal
     void inOrderTraversal();
@@ -111,6 +112,9 @@ public:
 
     // Public function to check if the tree is valid
     bool isValidBST();
+   
+    // Public function to perfom level order traversal
+    void levelOrderTraversal();
 
 
 
@@ -231,7 +235,7 @@ BSTNode* BST::search(int valA) {
 }
 
 // Public function to delete a node
-void BST::deletNode(int valA) {
+void BST::deleteNode(int valA) {
     root = deleteNode(root, valA);
 }
 
@@ -284,8 +288,7 @@ void BST::postOrderTraversal() {
 int BST::findMin() {
     // Check if the tree is empty
     if (root == nullptr) {
-        cout << "Tree is empty" << endl; // Output a message indicating that the tree is empty
-        return -1; // Return -1 to indicate that there is no minimum value
+        throw runtime_error("Tree is empty. Cannot find minimum value.");
     }
 
     // Initialize a pointer to traverse the tree, starting from the root
@@ -303,10 +306,8 @@ int BST::findMin() {
 // Public function to find max value in BST
 int BST::findMax() {
     // Check if the root of the BST is null
-    if(root == nullptr) {
-        // If the tree is empty, print a message and return -1
-        cout << "Tree is empty" << endl;
-        return -1;
+     if (root == nullptr) {
+        throw runtime_error("Tree is empty. Cannot find minimum value.");
     }
 
     // Initialize a pointer to traverse the tree, starting at the root
@@ -431,7 +432,41 @@ bool BST::isValidBST(BSTNode* node, BSTNode* minNode, BSTNode* maxNode) {
     return isValidBST(root);
  }
 
+// Public function to perfom level order traversal
+void BST::levelOrderTraversal() {
+    // If the tree is empty, print a message and return
+    if (root == nullptr) {
+        cout << "The tree is empty." << endl;
+        return;
+    }
 
+    // Create a queue to hold nodes to visit, starting with the root node
+    queue<BSTNode*> q;
+    q.push(root);
+
+    // While there are still nodes to visit
+    while (!q.empty()) {
+        // Get the front node from the queue and remove it
+        BSTNode* currentNode = q.front();
+        q.pop();
+
+        // Print the value of the current node
+        cout << currentNode->val << " ";
+
+        // If the left child exists, add it to the queue
+        if (currentNode->left != nullptr) {
+            q.push(currentNode->left);
+        }
+
+        // If the right child exists, add it to the queue
+        if (currentNode->right != nullptr) {
+            q.push(currentNode->right);
+        }
+    }
+
+    // Print a newline character after all nodes have been visited
+    cout<< endl;   
+}
 
 // Destructor to delete the entire BST
 BST::~BST() {
