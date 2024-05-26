@@ -295,6 +295,26 @@ void testLevelOrderTraversal() {
     assert(output == expectedOutput);  
 }
 
+void testIsFullTree() {
+    
+    BST tree;
+
+    assert(tree.isFullTree() == true);
+    
+    tree.insert(5);
+    tree.insert(3);
+    tree.insert(7);
+    tree.insert(2);
+    tree.insert(4);
+    tree.insert(6);
+    tree.insert(8);
+    assert(tree.isFullTree() == true);
+
+  
+    tree.insert(1);
+    assert(tree.isFullTree() == false);
+}
+
 
 
 int main() {
@@ -311,6 +331,7 @@ int main() {
     testCountNodes();
     testFindLCA();
     testLevelOrderTraversal();
+    testIsFullTree();
 
     std::cout << "All tests passed!" << std::endl;
 

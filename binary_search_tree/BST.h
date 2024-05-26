@@ -58,6 +58,9 @@ private:
     // Helper function to check if the tree is valid
     bool isValidBST(BSTNode* node, BSTNode* minNode = nullptr, BSTNode* maxNode = nullptr);
 
+    // Helper function to check if the tree is  a full tree
+    bool isFullTree(BSTNode* node);
+
 public:
     BSTNode* root;  // Root node of the BST
 
@@ -115,6 +118,9 @@ public:
    
     // Public function to perfom level order traversal
     void levelOrderTraversal();
+
+    // Public function to check if the tree is  a full tree
+    bool isFullTree();
 
 
 
@@ -467,6 +473,32 @@ void BST::levelOrderTraversal() {
     // Print a newline character after all nodes have been visited
     cout<< endl;   
 }
+
+// Helper function to check if the tree is  a full tree
+bool BST::isFullTree(BSTNode* node) {
+    // Base case: If the node is null, it's a full tree (empty subtree is considered full)
+    if (node == nullptr) {
+        return true;
+    }
+
+    // If the node is a leaf (both children are null), it's a full tree
+    if (node->left == nullptr && node->right == nullptr) {
+        return true;
+    }
+
+    // If the node has both left and right children, recursively check if both subtrees are full
+    if (node->left != nullptr && node->right != nullptr) {
+        return isFullTree(node->left) && isFullTree(node->right);
+    }
+
+    // If the node has only one child, it's not a full tree
+    return false;
+}
+// Public function to check if the tree is  a full tree
+    bool BST::isFullTree() {
+       return isFullTree(root);
+    }
+
 
 // Destructor to delete the entire BST
 BST::~BST() {
