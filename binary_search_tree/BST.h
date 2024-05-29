@@ -60,6 +60,9 @@ private:
 
     // Helper function to check if the tree is  a full tree
     bool isFullTree(BSTNode* node);
+   
+    // Helper function to check if the tree is  a complete tree
+    bool isCompleteTree(BSTNode* node);
 
 public:
     BSTNode* root;  // Root node of the BST
@@ -121,6 +124,9 @@ public:
 
     // Public function to check if the tree is  a full tree
     bool isFullTree();
+
+    // Publick function to check if the tree is  a complete tree
+    bool isCompleteTree();
 
 
 
@@ -494,10 +500,56 @@ bool BST::isFullTree(BSTNode* node) {
     // If the node has only one child, it's not a full tree
     return false;
 }
+
 // Public function to check if the tree is  a full tree
-    bool BST::isFullTree() {
+bool BST::isFullTree() {
        return isFullTree(root);
     }
+
+// Helper function to check if the tree is a complete tree
+bool BST::isCompleteTree(BSTNode* node) {
+    if (node == nullptr) {
+        return true; // An empty tree is complete
+    }
+
+    queue<BSTNode*> q; // Queue for level order traversal
+    q.push(node);
+
+    bool foundNonFullNode = false; // Flag to mark the first node that doesn't have 2 children
+
+    while (!q.empty()) {
+        BSTNode* currentNode = q.front(); // Get the front node in the queue
+        q.pop(); // Remove the front node from the queue
+
+        // Check the left child
+        if (currentNode->left != nullptr) {
+            if (foundNonFullNode) {
+                return false; // If we found a non-full node previously and now we see a node with a child, the tree is not complete
+            }
+            q.push(currentNode->left); // Push the left child to the queue
+        } else {
+            foundNonFullNode = true; // Mark that we have found a non-full node
+        }
+
+        // Check the right child
+        if (currentNode->right != nullptr) {
+            if (foundNonFullNode) {
+                return false; // If we found a non-full node previously and now we see a node with a child, the tree is not complete
+            }
+            q.push(currentNode->right); // Push the right child to the queue
+        } else {
+            foundNonFullNode = true; // Mark that we have found a non-full node
+        }
+    }
+
+    return true; // If we traverse all nodes without finding an invalid structure, the tree is complete
+}
+
+// Public function to check if the tree is a complete tree
+bool BST::isCompleteTree(){
+    return isCompleteTree(root);
+}
+
 
 
 // Destructor to delete the entire BST
