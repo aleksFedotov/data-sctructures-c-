@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-
+#include <cmath>
+#include <iomanip>
 using namespace std;
 
 // Class representing a node in the BST
@@ -64,6 +65,8 @@ private:
     // Helper function to check if the tree is  a complete tree
     bool isCompleteTree(BSTNode* node);
 
+    // Helper function to print a given level
+    void printGivenLevel(BSTNode* root, int level, int space);
 public:
     BSTNode* root;  // Root node of the BST
 
@@ -125,11 +128,11 @@ public:
     // Public function to check if the tree is  a full tree
     bool isFullTree();
 
-    // Publick function to check if the tree is  a complete tree
+    // Public function to check if the tree is  a complete tree
     bool isCompleteTree();
 
-
-
+    // Public function to print the tree structure
+    void printTreeStructure();
 
     // Destructor to delete the entire BST
     ~BST();
@@ -550,6 +553,37 @@ bool BST::isCompleteTree(){
     return isCompleteTree(root);
 }
 
+
+// Helper function to print a given level
+void BST::printGivenLevel(BSTNode* node, int level, int space){
+    if (node == nullptr) {
+        // Print empty space if the node is null
+        cout << setw(space) << " ";
+        return;
+    }
+    if (level == 1) {
+        // Print the node value if it's the correct level
+        cout << setw(space) << node->val;
+    } else if (level > 1) {
+        // Recursively print left and right children at the next level
+        printGivenLevel(node->left, level-1, space/2);
+        printGivenLevel(node->right, level-1, space/2);
+    }
+}
+
+// Public function to print the tree structure
+void BST::printTreeStructure(){
+    int height = findHeight(); // Calculate the height of the tree
+    int space = pow(2, height); // Initial space for the first level
+
+    // Iterate through each level of the tree
+    for (int i = 1; i <= height; i++) {
+        // Print all nodes at the current level with appropriate spacing
+        printGivenLevel(root, i, space);
+        cout << endl; // Move to the next line after printing each level
+        space = space / 2; // Halve the space for the next level
+    }
+}
 
 
 // Destructor to delete the entire BST

@@ -315,6 +315,36 @@ void testIsFullTree() {
     assert(tree.isFullTree() == false);
 }
 
+void testIsCompleteTree() {
+    BST tree;
+
+    assert(tree.isCompleteTree() == true);
+
+    tree.insert(4);
+    tree.insert(2);
+    tree.insert(6);
+    tree.insert(1);
+    tree.insert(3);
+    tree.insert(5);
+
+    assert(tree.isCompleteTree() == true);
+
+    tree.insert(7);
+
+    assert(tree.isCompleteTree() == true);
+
+    BSTNode* temp = tree.root->right->right->right;
+    tree.root->right->right->right = new BSTNode(8);
+
+    assert(tree.isCompleteTree() == false);
+
+    delete tree.root->right->right->right;
+    tree.root->right->right->right = temp;
+
+    assert(tree.isCompleteTree() == true);
+}
+
+
 
 
 int main() {
@@ -332,6 +362,7 @@ int main() {
     testFindLCA();
     testLevelOrderTraversal();
     testIsFullTree();
+    testIsCompleteTree();
 
     std::cout << "All tests passed!" << std::endl;
 
