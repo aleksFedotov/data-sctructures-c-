@@ -12,7 +12,7 @@
  * and demonstrates both direct access and loop-based access methods.
  */
 template <typename T>
-class Array {
+class DynamicArray {
 private:
     // Using unique_ptr for automatic memory management
     std::unique_ptr<T[]> array;
@@ -56,20 +56,20 @@ public:
      * @brief Constructs an array with optional initial capacity
      * @param size Initial capacity of the array (default: 10)
      */
-    explicit Array(size_t size = 10) : array(new T[size]), size(size), length(0) {}
+    explicit DynamicArray(size_t size = 10) : array(new T[size]), size(size), length(0) {}
     
     // Rule of five implementation for proper resource management
     
     /**
      * @brief Destructor - handled automatically by unique_ptr
      */
-    ~Array() = default;
+    ~DynamicArray() = default;
     
     /**
      * @brief Copy constructor - creates a deep copy
      * @param other Array to copy from
      */
-    Array(const Array& other) : array(new T[other.size]), size(other.size), length(other.length) {
+    DynamicArray(const DynamicArray& other) : array(new T[other.size]), size(other.size), length(other.length) {
         // Deep copy all elements
         for (size_t i = 0; i < length; i++) {
             array[i] = other.array[i];
@@ -81,7 +81,7 @@ public:
      * @param other Array to copy from
      * @return Reference to this array
      */
-    Array& operator=(const Array& other) {
+    DynamicArray& operator=(const DynamicArray& other) {
         if (this != &other) {
             // Create new array and copy elements before replacing current array
             std::unique_ptr<T[]> newArray(new T[other.size]);
@@ -99,7 +99,7 @@ public:
      * @brief Move constructor - transfers ownership efficiently
      * @param other Array to move from
      */
-    Array(Array&& other) noexcept
+    DynamicArray(DynamicArray&& other) noexcept
         : array(std::move(other.array)), size(other.size), length(other.length) {
         // Reset the source object
         other.size = 0;
@@ -111,7 +111,7 @@ public:
      * @param other Array to move from
      * @return Reference to this array
      */
-    Array& operator=(Array&& other) noexcept {
+    DynamicArray& operator=(DynamicArray&& other) noexcept {
         if (this != &other) {
             array = std::move(other.array);
             size = other.size;
@@ -310,7 +310,7 @@ public:
     /**
      * @brief Rotates all elements left by one position
      * First element moves to last position
-     * @throws std::logic_error if array is empty
+     * @throws std::logic_error if array is emptygit 
      * Time complexity: O(n)
      */
     void rotate_left();
@@ -351,7 +351,7 @@ public:
  * @param newSize The new capacity to allocate
  */
 template <typename T>
-void Array<T>::resize(size_t newSize) {
+void DynamicArray<T>::resize(size_t newSize) {
     // Create new array with new size
     std::unique_ptr<T[]> newArray(new T[newSize]);
     
@@ -372,7 +372,7 @@ void Array<T>::resize(size_t newSize) {
  * Only shrinks when array is 25% full or less and above minimum size.
  */
 template <typename T>
-void Array<T>::tryShrink() {
+void DynamicArray<T>::tryShrink() {
     // Shrink when array is 1/4 full to avoid thrashing
     // Also ensure we don't shrink very small arrays
     if (length > 0 && length <= size / 4 && size > 10) {
@@ -386,7 +386,7 @@ void Array<T>::tryShrink() {
  * Prints all elements in a readable format with commas between elements.
  */
 template <typename T>
-void Array<T>::display() const {
+void DynamicArray<T>::display() const {
     std::cout << "[ ";
     for (size_t i = 0; i < length; i++) {
         std::cout << array[i];
@@ -405,7 +405,7 @@ void Array<T>::display() const {
  * @param value Value to add
  */
 template <typename T>
-void Array<T>::append(const T& value) {
+void DynamicArray<T>::append(const T& value) {
     // Double capacity if full
     if (length >= size) {
         resize(size == 0 ? 1 : size * 2);
@@ -424,7 +424,7 @@ void Array<T>::append(const T& value) {
  * @throws std::out_of_range if index is greater than length
  */
 template <typename T>
-void Array<T>::insert(size_t index, const T& value) {
+void DynamicArray<T>::insert(size_t index, const T& value) {
     if (index > length) {
         throw std::out_of_range("Index out of range");
     }
@@ -453,7 +453,7 @@ void Array<T>::insert(size_t index, const T& value) {
  * @throws std::out_of_range if array is empty
  */
 template <typename T>
-void Array<T>::pop() {
+void DynamicArray<T>::pop() {
     if (length == 0) {
         throw std::out_of_range("Array is empty");
     }
@@ -472,7 +472,7 @@ void Array<T>::pop() {
  * @throws std::out_of_range if index is out of bounds
  */
 template <typename T>
-void Array<T>::delete_item(size_t index) {
+void DynamicArray<T>::delete_item(size_t index) {
     if (index >= length) {
         throw std::out_of_range("Index out of range");
     }
@@ -496,7 +496,7 @@ void Array<T>::delete_item(size_t index) {
  * @return Index of the value or -1 if not found
  */
 template <typename T>
-size_t Array<T>::search(const T& value) const {
+size_t DynamicArray<T>::search(const T& value) const {
     // Check each element sequentially
     for (size_t i = 0; i < length; i++) {
         if (array[i] == value) {
@@ -517,7 +517,7 @@ size_t Array<T>::search(const T& value) const {
  * @return Index of the value or -1 if not found
  */
 template <typename T>
-size_t Array<T>::binary_search(const T& value) const {
+size_t DynamicArray<T>::binary_search(const T& value) const {
     // Handle empty array case
     if (length == 0) {
         return static_cast<size_t>(-1);
@@ -559,7 +559,7 @@ size_t Array<T>::binary_search(const T& value) const {
  */
 template <typename T>
 template <typename Compare>
-size_t Array<T>::binary_search(const T& value, Compare comp) const {
+size_t DynamicArray<T>::binary_search(const T& value, Compare comp) const {
     // Handle empty array case
     if (length == 0) {
         return static_cast<size_t>(-1);
@@ -600,7 +600,7 @@ size_t Array<T>::binary_search(const T& value, Compare comp) const {
  * @throws std::out_of_range if index is out of bounds
  */
 template <typename T>
-T& Array<T>::get(size_t index) {
+T& DynamicArray<T>::get(size_t index) {
     if (index >= length) {
         throw std::out_of_range("Index out of range");
     }
@@ -619,7 +619,7 @@ T& Array<T>::get(size_t index) {
  * @throws std::out_of_range if index is out of bounds
  */
 template <typename T>
-const T& Array<T>::get(size_t index) const {
+const T& DynamicArray<T>::get(size_t index) const {
     if (index >= length) {
         throw std::out_of_range("Index out of range");
     }
@@ -639,7 +639,7 @@ const T& Array<T>::get(size_t index) const {
  * @throws std::out_of_range if index is out of bounds
  */
 template <typename T>
-T Array<T>::get_with_loop(size_t index) const {
+T DynamicArray<T>::get_with_loop(size_t index) const {
     if (index >= length) {
         throw std::out_of_range("Index out of range");
     }
@@ -664,7 +664,7 @@ T Array<T>::get_with_loop(size_t index) const {
  * @throws std::out_of_range if index is out of bounds
  */
 template <typename T>
-void Array<T>::set(size_t index, const T& value) {
+void DynamicArray<T>::set(size_t index, const T& value) {
     if (index >= length) {
         throw std::out_of_range("Index out of range");
     }
@@ -683,7 +683,7 @@ void Array<T>::set(size_t index, const T& value) {
  * @throws std::out_of_range if index is out of bounds
  */
 template <typename T>
-void Array<T>::set_with_loop(size_t index, const T& value) {
+void DynamicArray<T>::set_with_loop(size_t index, const T& value) {
     if (index >= length) {
         throw std::out_of_range("Index out of range");
     }
@@ -706,7 +706,7 @@ void Array<T>::set_with_loop(size_t index, const T& value) {
  * @throws std::logic_error if array is empty
  */
 template <typename T>
-T Array<T>::max() const {
+T DynamicArray<T>::max() const {
     if (length == 0) {
         throw std::logic_error("Cannot find max in empty array");
     }
@@ -733,7 +733,7 @@ T Array<T>::max() const {
  * @throws std::logic_error if array is empty
  */
 template <typename T>
-T Array<T>::min() const {
+T DynamicArray<T>::min() const {
     if (length == 0) {
         throw std::logic_error("Cannot find min in empty array");
     }
@@ -757,7 +757,7 @@ T Array<T>::min() const {
  * Swaps elements from both ends toward the middle.
  */
 template <typename T>
-void Array<T>::reverse() {
+void DynamicArray<T>::reverse() {
     // Nothing to do if array is empty or has only one element
     if (length <= 1) return;
     
@@ -780,7 +780,7 @@ void Array<T>::reverse() {
  * @throws std::logic_error if array is empty
  */
 template <typename T>
-void Array<T>::shift_right() {
+void DynamicArray<T>::shift_right() {
     if (length == 0) {
         throw std::logic_error("Cannot shift an empty array");
     }
@@ -802,7 +802,7 @@ void Array<T>::shift_right() {
  * @throws std::logic_error if array is empty
  */
 template <typename T>
-void Array<T>::shift_left() {
+void DynamicArray<T>::shift_left() {
     if (length == 0) {
         throw std::logic_error("Cannot shift an empty array");
     }
@@ -825,7 +825,7 @@ void Array<T>::shift_left() {
  * @throws std::logic_error if array is empty
  */
 template <typename T>
-void Array<T>::rotate_right() {
+void DynamicArray<T>::rotate_right() {
     if (length == 0) {
         throw std::logic_error("Cannot rotate an empty array");
     }
@@ -851,7 +851,7 @@ void Array<T>::rotate_right() {
  * @throws std::logic_error if array is empty
  */
 template <typename T>
-void Array<T>::rotate_left() {
+void DynamicArray<T>::rotate_left() {
     if (length == 0) {
         throw std::logic_error("Cannot rotate an empty array");
     }
@@ -871,10 +871,10 @@ void Array<T>::rotate_left() {
 
 
 /**
- * @brief Example usage of the Array class
+ * @brief Example usage of the DynamicArray class
  */
 // int main() {
-//     Array<int> arr(5);
+//     DynamicArray<int> arr(5);
 //     
 //     // Add elements
 //     arr.append(10);
